@@ -244,7 +244,7 @@ class SystemUILyric : BaseHook() {
                         "Lyric Init".log()
                         clockView = view as TextView
                         targetView = (clockView.parent as LinearLayout).apply {
-                            gravity = Gravity.CENTER
+                            gravity = Gravity.LEFT
                         }
                         canLoad = false
                         lyricInit()
