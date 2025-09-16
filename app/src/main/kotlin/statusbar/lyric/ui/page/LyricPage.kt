@@ -50,6 +50,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
@@ -95,21 +96,28 @@ fun LyricPage(
     val scrollBehavior = MiuixScrollBehavior(rememberTopAppBarState())
     val lyricWidth = remember { mutableStateOf(config.lyricWidth.toString()) }
     val fixedLyricWidth = remember { mutableStateOf(config.fixedLyricWidth) }
-    val lyricAnimOptions = listOf(
-        stringResource(R.string.lyrics_animation_none),
-        stringResource(R.string.lyrics_animation_top),
-        stringResource(R.string.lyrics_animation_bottom),
-        stringResource(R.string.lyrics_animation_start),
-        stringResource(R.string.lyrics_animation_end),
-        stringResource(R.string.lyrics_animation_fade),
-        stringResource(R.string.lyrics_animation_scale_x_y),
-        stringResource(R.string.lyrics_animation_scale_x),
-        stringResource(R.string.lyrics_animation_scale_y),
-        stringResource(R.string.lyrics_animation_horizontalflip),
-        stringResource(R.string.lyrics_animation_verticalflip),
-        stringResource(R.string.lyrics_animation_random),
-    )
-    val lyricAnimSelectedOption = remember { mutableIntStateOf(config.lyricAnimation) }
+    // 动画名称列表
+    val context = LocalContext.current
+    val lyricAnimInOptions = remember {
+        context.resources.getStringArray(R.array.lyric_animation_in_options).toList()
+    }
+    val lyricAnimOutOptions = remember {
+        context.resources.getStringArray(R.array.lyric_animation_out_options).toList()
+    }
+    val lyricAnimInDisplayOptions = remember {
+        context.resources.getStringArray(R.array.lyric_animation_in_display_options).toList()
+    }
+    val lyricAnimOutDisplayOptions = remember {
+        context.resources.getStringArray(R.array.lyric_animation_out_display_options).toList()
+    }
+    // 入场动画选中的索引
+    val lyricAnimInSelectedOption = remember {
+        mutableIntStateOf(lyricAnimInOptions.indexOf(config.lyricAnimationIn))
+    }
+    // 出场动画选中的索引
+    val lyricAnimOutSelectedOption = remember {
+        mutableIntStateOf(lyricAnimOutOptions.indexOf(config.lyricAnimationOut))
+    }
     val lyricInterpolatorOptions = listOf(
         stringResource(R.string.lyrics_interpolator_linear),
         stringResource(R.string.lyrics_interpolator_accelerate),
@@ -118,7 +126,8 @@ fun LyricPage(
         stringResource(R.string.lyrics_interpolator_overshoot),
         stringResource(R.string.lyrics_interpolator_bounce),
     )
-    val lyricInterpolatorSelectedOption = remember { mutableIntStateOf(config.lyricInterpolator) }
+    val lyricInterpolatorInSelectedOption = remember { mutableIntStateOf(config.lyricInterpolatorIn) }
+    val lyricInterpolatorOutSelectedOption = remember { mutableIntStateOf(config.lyricInterpolatorOut) }
     val showDialog = remember { mutableStateOf(false) }
     val showLyricWidthDialog = remember { mutableStateOf(false) }
     val showLyricSizeDialog = remember { mutableStateOf(false) }
@@ -133,7 +142,8 @@ fun LyricPage(
     val showLyricBottomMarginsDialog = remember { mutableStateOf(false) }
     val showLyricStartMarginsDialog = remember { mutableStateOf(false) }
     val showLyricEndMarginsDialog = remember { mutableStateOf(false) }
-    val showLyricAnimDurationDialog = remember { mutableStateOf(false) }
+    val showLyricAnimInDurationDialog = remember { mutableStateOf(false) }
+    val showLyricAnimOutDurationDialog = remember { mutableStateOf(false) }
 
     val hazeState = remember { HazeState() }
     val hazeStyle = HazeStyle(
@@ -334,32 +344,61 @@ fun LyricPage(
                             .padding(horizontal = 12.dp)
                             .padding(bottom = 6.dp)
                     ) {
+                        // 开始动画
                         SuperDropdown(
-                            title = stringResource(R.string.lyrics_animation),
-                            items = lyricAnimOptions,
-                            selectedIndex = lyricAnimSelectedOption.intValue,
-                            onSelectedIndexChange = { newOption ->
-                                lyricAnimSelectedOption.intValue = newOption
-                                config.lyricAnimation = newOption
+                            title = stringResource(R.string.lyrics_animation_in),
+                            items = lyricAnimInDisplayOptions,
+                            selectedIndex = lyricAnimInSelectedOption.value,
+                            onSelectedIndexChange = { newIndex ->
+                                lyricAnimInSelectedOption.value = newIndex
+                                config.lyricAnimationIn = lyricAnimInOptions[newIndex]
                                 changeConfig()
-                            },
+                            }
                         )
                         SuperDropdown(
-                            title = stringResource(R.string.lyrics_animation_interpolator),
+                            title = stringResource(R.string.lyrics_animation_interpolator_in),
                             items = lyricInterpolatorOptions,
-                            selectedIndex = lyricInterpolatorSelectedOption.intValue,
+                            selectedIndex = lyricInterpolatorInSelectedOption.intValue,
                             onSelectedIndexChange = { newOption ->
-                                lyricInterpolatorSelectedOption.intValue = newOption
-                                config.lyricInterpolator = newOption
+                                lyricInterpolatorInSelectedOption.intValue = newOption
+                                config.lyricInterpolatorIn = newOption
                                 changeConfig()
                             },
                         )
                         SuperArrow(
-                            title = stringResource(R.string.lyrics_animation_duration),
+                            title = stringResource(R.string.lyrics_animation_duration_in),
                             onClick = {
-                                showLyricAnimDurationDialog.value = true
+                                showLyricAnimInDurationDialog.value = true
                             },
-                            holdDownState = showLyricAnimDurationDialog.value
+                            holdDownState = showLyricAnimInDurationDialog.value
+                        )
+                        // 结束动画
+                        SuperDropdown(
+                            title = stringResource(R.string.lyrics_animation_out),
+                            items = lyricAnimOutDisplayOptions,
+                            selectedIndex = lyricAnimOutSelectedOption.value,
+                            onSelectedIndexChange = { newIndex ->
+                                lyricAnimOutSelectedOption.value = newIndex
+                                config.lyricAnimationOut = lyricAnimOutOptions[newIndex]
+                                changeConfig()
+                            }
+                        )
+                        SuperDropdown(
+                            title = stringResource(R.string.lyrics_animation_interpolator_out),
+                            items = lyricInterpolatorOptions,
+                            selectedIndex = lyricInterpolatorOutSelectedOption.intValue,
+                            onSelectedIndexChange = { newOption ->
+                                lyricInterpolatorOutSelectedOption.intValue = newOption
+                                config.lyricInterpolatorOut = newOption
+                                changeConfig()
+                            },
+                        )
+                        SuperArrow(
+                            title = stringResource(R.string.lyrics_animation_duration_out),
+                            onClick = {
+                                showLyricAnimOutDurationDialog.value = true
+                            },
+                            holdDownState = showLyricAnimOutDurationDialog.value
                         )
                     }
                     Card(
@@ -402,7 +441,8 @@ fun LyricPage(
     LyricBottomMarginsDialog(showLyricBottomMarginsDialog)
     LyricStartMarginsDialog(showLyricStartMarginsDialog)
     LyricEndMarginsDialog(showLyricEndMarginsDialog)
-    LyricAnimDurationDialog(showLyricAnimDurationDialog)
+    LyricAnimInDurationDialog(showLyricAnimInDurationDialog)
+    LyricAnimOutDurationDialog(showLyricAnimOutDurationDialog)
 }
 
 @Composable
@@ -968,11 +1008,11 @@ fun LyricEndMarginsDialog(showDialog: MutableState<Boolean>) {
 }
 
 @Composable
-fun LyricAnimDurationDialog(showDialog: MutableState<Boolean>) {
-    val value = remember { mutableStateOf(config.animationDuration.toString()) }
+fun LyricAnimInDurationDialog(showDialog: MutableState<Boolean>) {
+    val value = remember { mutableStateOf(config.animationDurationIn.toString()) }
     SuperDialog(
-        title = stringResource(R.string.lyrics_animation_duration),
-        summary = stringResource(R.string.lyric_animation_duration_tips),
+        title = stringResource(R.string.lyrics_animation_duration_in),
+        summary = stringResource(R.string.lyrics_animation_duration_in_tips),
         show = showDialog,
         onDismissRequest = { showDialog.value = false },
     ) {
@@ -997,9 +1037,52 @@ fun LyricAnimDurationDialog(showDialog: MutableState<Boolean>) {
                 colors = ButtonDefaults.textButtonColorsPrimary(),
                 onClick = {
                     if (value.value.toIntOrNull().isNotNull() && value.value.toInt() in 0..1000) {
-                        config.animationDuration = value.value.toInt()
+                        config.animationDurationIn = value.value.toInt()
                     } else {
-                        config.animationDuration = 300
+                        config.animationDurationIn = 300
+                        value.value = "300"
+                    }
+                    showDialog.value = false
+                    changeConfig()
+                }
+            )
+        }
+    }
+}
+
+@Composable
+fun LyricAnimOutDurationDialog(showDialog: MutableState<Boolean>) {
+    val value = remember { mutableStateOf(config.animationDurationOut.toString()) }
+    SuperDialog(
+        title = stringResource(R.string.lyrics_animation_duration_out),
+        summary = stringResource(R.string.lyrics_animation_duration_out_tips),
+        show = showDialog,
+        onDismissRequest = { showDialog.value = false },
+    ) {
+        TextField(
+            modifier = Modifier.padding(bottom = 16.dp),
+            value = value.value,
+            maxLines = 1,
+            onValueChange = { value.value = it }
+        )
+        Row(
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            TextButton(
+                modifier = Modifier.weight(1f),
+                text = stringResource(R.string.cancel),
+                onClick = { showDialog.value = false }
+            )
+            Spacer(Modifier.width(20.dp))
+            TextButton(
+                modifier = Modifier.weight(1f),
+                text = stringResource(R.string.ok),
+                colors = ButtonDefaults.textButtonColorsPrimary(),
+                onClick = {
+                    if (value.value.toIntOrNull().isNotNull() && value.value.toInt() in 0..1000) {
+                        config.animationDurationOut = value.value.toInt()
+                    } else {
+                        config.animationDurationOut = 300
                         value.value = "300"
                     }
                     showDialog.value = false

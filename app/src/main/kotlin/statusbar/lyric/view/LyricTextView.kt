@@ -103,7 +103,7 @@ class LyricTextView(context: Context) : TextView(context), Choreographer.FrameCa
         isScrolling = true
         postDelayed(
             startScrollRunnable,
-            config.animationDuration + if (config.dynamicLyricSpeed) 200L else 500L
+            config.animationDurationIn + if (config.dynamicLyricSpeed) 200L else 500L
         )
     }
 

@@ -34,14 +34,12 @@ import android.view.animation.LinearInterpolator
 import android.view.animation.OvershootInterpolator
 import android.view.animation.ScaleAnimation
 import android.view.animation.TranslateAnimation
+import android.view.animation.RotateAnimation
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import statusbar.lyric.tools.Tools.isNotNull
 
 object LyricViewTools {
-    private var animaList: ArrayList<Int> = arrayListOf(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)
-    val randomAnima: Int get() = animaList.random()
-
     fun getAlphaAnimation(into: Boolean, duration: Long = 250): AnimationSet {
         val alphaAnimation = (if (into) AlphaAnimation(0f, 1F) else AlphaAnimation(1F, 0f)).apply {
             this.duration = duration
@@ -51,32 +49,100 @@ object LyricViewTools {
         }
     }
 
-    fun switchViewInAnima(int: Int?, interpolator: Int?, time: Int?): Animation? {
+    fun switchViewInAnima(type: String?, interpolator: Int?, time: Int?): Animation? {
         val t = time?.toLong() ?: 500L
-        val translateAnimation: Animation? = when (int) {
-            1 -> TranslateAnimation(0f, 0f, 100f, 0f)
-            2 -> TranslateAnimation(0f, 0f, -100f, 0f)
-            3 -> TranslateAnimation(100f, 0f, 0f, 0f)
-            4 -> TranslateAnimation(-100f, 0f, 0f, 0f)
-            5 -> null
-            6 -> ScaleAnimation(0f, 1f, 0f, 1f)
-            7 -> ScaleAnimation(0f, 1f, 1f, 1f)
-            8 -> ScaleAnimation(1f, 1f, 0f, 1f)
-            9 -> ScaleAnimation(
-                -1f, 1f, // X 方向从正常比例翻转到反向
-                1f, 1f,  // Y 方向保持不变
-                Animation.RELATIVE_TO_SELF, 0.5f, // X 轴中心点：视图的中间
-                Animation.RELATIVE_TO_SELF, 0.5f  // Y 轴中心点：视图的中间
+        val translateAnimation: Animation? = when (type) {
+            // Slide 滑入
+            "SlideInUp" -> TranslateAnimation(
+                Animation.RELATIVE_TO_SELF, 0f,
+                Animation.RELATIVE_TO_SELF, 0f,
+                Animation.RELATIVE_TO_SELF, 1f,
+                Animation.RELATIVE_TO_SELF, 0f
+            )
+            "SlideInDown" -> TranslateAnimation(
+                Animation.RELATIVE_TO_SELF, 0f,
+                Animation.RELATIVE_TO_SELF, 0f,
+                Animation.RELATIVE_TO_SELF, -1f,
+                Animation.RELATIVE_TO_SELF, 0f
+            )
+            "SlideInLeft" -> TranslateAnimation(
+                Animation.RELATIVE_TO_SELF, 1f,
+                Animation.RELATIVE_TO_SELF, 0f,
+                Animation.RELATIVE_TO_SELF, 0f,
+                Animation.RELATIVE_TO_SELF, 0f
+            )
+            "SlideInRight" -> TranslateAnimation(
+                Animation.RELATIVE_TO_SELF, -1f,
+                Animation.RELATIVE_TO_SELF, 0f,
+                Animation.RELATIVE_TO_SELF, 0f,
+                Animation.RELATIVE_TO_SELF, 0f
             )
 
-            10 -> ScaleAnimation(
-                1f, 1f, // X 方向保持不变
-                -1f, 1f,  // Y 方向从正常比例翻转到反向
-                Animation.RELATIVE_TO_SELF, 0.5f, // X 轴中心点：视图的中间
-                Animation.RELATIVE_TO_SELF, 0.5f  // Y 轴中心点：视图的中间
-            )
+            // Fade 淡入
+            "FadeIn" -> TranslateAnimation(0f, 0f, 0f, 0f)
+            "FadeInUp" -> TranslateAnimation(0f, 0f, 100f, 0f)
+            "FadeInDown" -> TranslateAnimation(0f, 0f, -100f, 0f)
+            "FadeInLeft" -> TranslateAnimation(100f, 0f, 0f, 0f)
+            "FadeInRight" -> TranslateAnimation(-100f, 0f, 0f, 0f)
 
-            else -> return null
+            // RollIn 滚动入场
+            "RollIn" -> AnimationSet(true).apply {
+                addAnimation(RotateAnimation(
+                    0f, 360f, // 旋转360°
+                    Animation.RELATIVE_TO_SELF, 0.5f,
+                    Animation.RELATIVE_TO_SELF, 0.5f
+                ))
+                addAnimation(TranslateAnimation(
+                    Animation.RELATIVE_TO_SELF, -1f, // 从左侧滚动进入
+                    Animation.RELATIVE_TO_SELF, 0f,
+                    Animation.RELATIVE_TO_SELF, 0f,
+                    Animation.RELATIVE_TO_SELF, 0f
+                ))
+            }
+            // 缩放
+            "ZoomInUp" -> AnimationSet(true).apply {
+                addAnimation(ScaleAnimation(0f, 1f, 0f, 1f))  // 添加缩放动画
+                addAnimation(TranslateAnimation(0f, 0f, 100f, 0f))  // 添加平移动画
+            }
+            "ZoomInDown" -> AnimationSet(true).apply {
+                addAnimation(ScaleAnimation(0f, 1f, 0f, 1f))
+                addAnimation(TranslateAnimation(0f, 0f, -100f, 0f))
+            }
+            "ZoomInLeft" -> AnimationSet(true).apply {
+                addAnimation(ScaleAnimation(0f, 1f, 0f, 1f))
+                addAnimation(TranslateAnimation(100f, 0f, 0f, 0f))
+            }
+            "ZoomInRight" -> AnimationSet(true).apply {
+                addAnimation(ScaleAnimation(0f, 1f, 0f, 1f))
+                addAnimation(TranslateAnimation(-100f, 0f, 0f, 0f))
+            }
+
+            // RotateIn 旋转进
+            "RotateIn" -> RotateAnimation(90f, 0f,
+                Animation.RELATIVE_TO_SELF, 0.5f,
+                Animation.RELATIVE_TO_SELF, 0.5f
+            )
+            "RotateInDownLeft" -> RotateAnimation(
+                -90f, 0f, // 从左下方向上旋转
+                Animation.RELATIVE_TO_SELF, 0f, // 左下 pivot
+                Animation.RELATIVE_TO_SELF, 1f
+            )
+            "RotateInDownRight" -> RotateAnimation(
+                90f, 0f, // 从右下方向上旋转
+                Animation.RELATIVE_TO_SELF, 1f, // 右下 pivot
+                Animation.RELATIVE_TO_SELF, 1f
+            )
+            "RotateInUpLeft" -> RotateAnimation(
+                90f, 0f, // 从左上方向下旋转
+                Animation.RELATIVE_TO_SELF, 0f, // 左上 pivot
+                Animation.RELATIVE_TO_SELF, 0f
+            )
+            "RotateInUpRight" -> RotateAnimation(
+                -90f, 0f, // 从右上方向下旋转
+                Animation.RELATIVE_TO_SELF, 1f, // 右上 pivot
+                Animation.RELATIVE_TO_SELF, 0f
+            )
+            else -> null
         }?.apply {
             duration = t
         }
@@ -86,38 +152,98 @@ object LyricViewTools {
         }
     }
 
-
-    fun switchViewOutAnima(str: Int?, time: Int?): Animation? {
+    fun switchViewOutAnima(type: String?, interpolator: Int?, time: Int?): Animation? {
         val t = time?.toLong() ?: 500L
-        val translateAnimation: Animation? = when (str) {
-            1 -> TranslateAnimation(0f, 0f, 0f, -100f)
-            2 -> TranslateAnimation(0f, 0f, 0f, +100f)
-            3 -> TranslateAnimation(0f, -100f, 0f, 0f)
-            4 -> TranslateAnimation(0f, 0f + 100f, 0f, 0f)
-            5 -> null
-            6 -> ScaleAnimation(1f, 0f, 1f, 0f)
-            7 -> ScaleAnimation(1f, 0f, 1f, 1f)
-            8 -> ScaleAnimation(1f, 1f, 1f, 0f)
-            9 -> ScaleAnimation(
-                1f, -1f, // X 方向从正常比例翻转到反向
-                1f, 1f,  // Y 方向保持不变
-                Animation.RELATIVE_TO_SELF, 0.5f, // X 轴中心点：视图的中间
-                Animation.RELATIVE_TO_SELF, 0.5f  // Y 轴中心点：视图的中间
+        val translateAnimation: Animation? = when (type) {
+            // Slide 滑出
+            "SlideOutUp" -> TranslateAnimation(0f, 0f, 0f, -100f)
+            "SlideOutDown" -> TranslateAnimation(0f, 0f, 0f, 100f)
+            "SlideOutLeft" -> TranslateAnimation(0f, -100f, 0f, 0f)
+            "SlideOutRight" -> TranslateAnimation(0f, 100f, 0f, 0f)
+
+            // Fade 淡出
+            "FadeOut" -> TranslateAnimation(0f, 0f, 0f, 0f)
+            "FadeOutUp" -> TranslateAnimation(
+                Animation.RELATIVE_TO_SELF, 0f,
+                Animation.RELATIVE_TO_SELF, 0f,
+                Animation.RELATIVE_TO_SELF, 0f,
+                Animation.RELATIVE_TO_SELF, -1f
+            )
+            "FadeOutDown" -> TranslateAnimation(
+                Animation.RELATIVE_TO_SELF, 0f,
+                Animation.RELATIVE_TO_SELF, 0f,
+                Animation.RELATIVE_TO_SELF, 0f,
+                Animation.RELATIVE_TO_SELF, 1f
+            )
+            "FadeOutLeft" -> TranslateAnimation(0f, -100f, 0f, 0f)
+            "FadeOutRight" -> TranslateAnimation(0f, 100f, 0f, 0f)
+
+            // RotateOut 旋转出
+            "RotateOut" -> RotateAnimation(0f, 90f,
+                Animation.RELATIVE_TO_SELF, 0.5f,
+                Animation.RELATIVE_TO_SELF, 0.5f
+            )
+            "RotateOutDownLeft" -> RotateAnimation(
+                0f, -90f, // 向左下旋转退出
+                Animation.RELATIVE_TO_SELF, 0f, // 左下 pivot
+                Animation.RELATIVE_TO_SELF, 1f
+            )
+            "RotateOutDownRight" -> RotateAnimation(
+                0f, 90f, // 向右下旋转退出
+                Animation.RELATIVE_TO_SELF, 1f, // 右下 pivot
+                Animation.RELATIVE_TO_SELF, 1f
+            )
+            "RotateOutUpLeft" -> RotateAnimation(
+                0f, 90f, // 向左上旋转退出
+                Animation.RELATIVE_TO_SELF, 0f, // 左上 pivot
+                Animation.RELATIVE_TO_SELF, 0f
+            )
+            "RotateOutUpRight" -> RotateAnimation(
+                0f, -90f, // 向右上旋转退出
+                Animation.RELATIVE_TO_SELF, 1f, // 右上 pivot
+                Animation.RELATIVE_TO_SELF, 0f
             )
 
-            10 -> ScaleAnimation(
-                1f, 1f, // X 方向保持不变
-                1f, -1f,  // Y 方向从正常比例翻转到反向
-                Animation.RELATIVE_TO_SELF, 0.5f, // X 轴中心点：视图的中间
-                Animation.RELATIVE_TO_SELF, 0.5f  // Y 轴中心点：视图的中间
-            )
+            // RollOut 滚动出
+            "RollOut" -> AnimationSet(true).apply {
+                addAnimation(RotateAnimation(
+                    0f, -360f, // 反向旋转360°
+                    Animation.RELATIVE_TO_SELF, 0.5f,
+                    Animation.RELATIVE_TO_SELF, 0.5f
+                ))
+                addAnimation(TranslateAnimation(
+                    Animation.RELATIVE_TO_SELF, 0f,
+                    Animation.RELATIVE_TO_SELF, 1f, // 向右滚动退出
+                    Animation.RELATIVE_TO_SELF, 0f,
+                    Animation.RELATIVE_TO_SELF, 0f
+                ))
+            }
 
-            else -> return null
+            // Zoom 缩放出
+            "ZoomOutUp" -> AnimationSet(true).apply {
+                addAnimation(ScaleAnimation(1f, 0f, 1f, 0f))  // 添加缩放动画
+                addAnimation(TranslateAnimation(0f, 0f, 0f, -100f))  // 修正位移参数（使用像素值而非相对值）
+            }
+            "ZoomOutDown" -> AnimationSet(true).apply {
+                addAnimation(ScaleAnimation(1f, 0f, 1f, 0f))
+                addAnimation(TranslateAnimation(0f, 0f, 0f, 100f))
+            }
+            "ZoomOutLeft" -> AnimationSet(true).apply {
+                addAnimation(ScaleAnimation(1f, 0f, 1f, 0f))
+                addAnimation(TranslateAnimation(0f, -100f, 0f, 0f))
+            }
+            "ZoomOutRight" -> AnimationSet(true).apply {
+                addAnimation(ScaleAnimation(1f, 0f, 1f, 0f))
+                addAnimation(TranslateAnimation(0f, 100f, 0f, 0f))
+            }
+
+            else -> null
         }?.apply {
             duration = t
         }
         return getAlphaAnimation(false, t).apply {
             translateAnimation?.let { addAnimation(it) }
+            switchInterpolator(interpolator)
         }
     }
 

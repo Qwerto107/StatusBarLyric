@@ -317,26 +317,47 @@ class Config {
         set(value) {
             config.put("forceTheIconToBeDisplayed", value)
         }
-    var lyricAnimation: Int
+    var lyricAnimationIn: String
         get() {
-            return config.opt("lyricAnimation", 1)
+            return config.opt("lyricAnimationIn", "FadeIn")
         }
         set(value) {
-            config.put("lyricAnimation", value)
+            config.put("lyricAnimationIn", value)
         }
-    var lyricInterpolator: Int
+    var lyricAnimationOut: String
         get() {
-            return config.opt("lyricInterpolator", 3)
+            return config.opt("lyricAnimationOut", "FadeOutUp")
         }
         set(value) {
-            config.put("lyricInterpolator", value)
+            config.put("lyricAnimationOut", value)
         }
-    var animationDuration: Int
+    var lyricInterpolatorIn: Int
         get() {
-            return config.opt("animationDuration", 500)
+            return config.opt("lyricInterpolatorIn", 3)
         }
         set(value) {
-            config.put("animationDuration", value)
+            config.put("lyricInterpolatorIn", value)
+        }
+    var lyricInterpolatorOut: Int
+        get() {
+            return config.opt("lyricInterpolatorOut", 3)
+        }
+        set(value) {
+            config.put("lyricInterpolatorOut", value)
+        }
+    var animationDurationIn: Int
+        get() {
+            return config.opt("animationDurationIn", 700)
+        }
+        set(value) {
+            config.put("animationDurationIn", value)
+        }
+    var animationDurationOut: Int
+        get() {
+            return config.opt("animationDurationOut", 300)
+        }
+        set(value) {
+            config.put("animationDurationOut", value)
         }
     var hideLyricWhenLockScreen: Boolean
         get() {

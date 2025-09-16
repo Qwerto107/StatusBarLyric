@@ -79,6 +79,8 @@
     <string name="broadcast_receive_timeout">广播接收超时</string>
     <string name="hide_time">隐藏时间</string>
     <string name="lyrics_animation">歌词动画</string>
+    <string name="lyrics_animation_in">歌词进入动画</string>
+    <string name="lyrics_animation_out">歌词退出动画</string>
     <string name="lyrics_animation_none">无效果</string>
     <string name="lyrics_animation_top">上划效果</string>
     <string name="lyrics_animation_bottom">下划效果</string>
@@ -89,15 +91,62 @@
     <string name="lyrics_animation_scale_x">X 轴翻页</string>
     <string name="lyrics_animation_scale_y">Y 轴翻页</string>
     <string name="lyrics_animation_random">随机效果</string>
-    <string name="lyrics_animation_interpolator">歌词动画插值器</string>
+    <string name="lyrics_animation_interpolator_in">歌词进入动画插值器</string>
+    <string name="lyrics_animation_interpolator_out">歌词退出动画插值器</string>
     <string name="lyrics_interpolator_linear">线性效果</string>
     <string name="lyrics_interpolator_accelerate">加速效果</string>
     <string name="lyrics_interpolator_decelerate">减速效果</string>
     <string name="lyrics_interpolator_accelerate_decelerate">加速 + 减速</string>
     <string name="lyrics_interpolator_overshoot">越界效果</string>
     <string name="lyrics_interpolator_bounce">弹跳效果</string>
-    <string name="lyrics_animation_duration">歌词动画时间</string>
-    <string name="lyric_animation_duration_tips">范围：300~1000</string>
+    <string name="lyrics_animation_duration_in">歌词进入动画时间</string>
+    <string name="lyrics_animation_duration_in_tips">范围：0~1000</string>
+    <string name="lyrics_animation_duration_out">歌词退出动画时间</string>
+    <string name="lyrics_animation_duration_out_tips">范围：0~1000</string>
+    <!-- 动画显示名称：入场动画 -->
+    <string-array name="lyric_animation_in_display_options">
+        <item>淡入</item>
+        <item>淡入上移</item>
+        <item>淡入下移</item>
+        <item>淡入左移</item>
+        <item>淡入右移</item>
+        <item>滑入上移</item>
+        <item>滑入下移</item>
+        <item>滑入左移</item>
+        <item>滑入右移</item>
+        <item>放大上移</item>
+        <item>放大下移</item>
+        <item>放大左移</item>
+        <item>放大右移</item>
+        <item>滚动进入</item>
+        <item>旋转进入</item>
+        <item>左下旋转进入</item>
+        <item>右下旋转进入</item>
+        <item>左上旋转进入</item>
+        <item>右上旋转进入</item>
+    </string-array>
+    <!-- 动画显示名称：退场动画 -->
+    <string-array name="lyric_animation_out_display_options">
+        <item>淡出</item>
+        <item>淡出上移</item>
+        <item>淡出下移</item>
+        <item>淡出左移</item>
+        <item>淡出右移</item>
+        <item>滑出上移</item>
+        <item>滑出下移</item>
+        <item>滑出左移</item>
+        <item>滑出右移</item>
+        <item>缩小上移</item>
+        <item>缩小下移</item>
+        <item>缩小左移</item>
+        <item>缩小右移</item>
+        <item>滚动退出</item>
+        <item>旋转退出</item>
+        <item>左下旋转退出</item>
+        <item>右下旋转退出</item>
+        <item>左上旋转退出</item>
+        <item>右上旋转退出</item>
+    </string-array>
     <string name="hide_notification_icon">隐藏通知图标</string>
     <string name="limit_visibility_change">限制可见性更改</string>
     <string name="limit_visibility_change_tips">可以防止部分系统的特性导致有时间会出现</string>
