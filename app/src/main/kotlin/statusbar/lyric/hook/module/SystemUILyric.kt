@@ -646,8 +646,8 @@ class SystemUILyric : BaseHook() {
                 updateLyricState(delay = data.delay)
                 if (handler.hasMessages(timeoutRestore)) {
                     handler.removeMessages(timeoutRestore)
-                    handler.sendEmptyMessageDelayed(timeoutRestore, 10000L)
-                } else handler.sendEmptyMessageDelayed(timeoutRestore, 10000L)
+                    handler.sendEmptyMessageDelayed(timeoutRestore, 15000L)
+                } else handler.sendEmptyMessageDelayed(timeoutRestore, 15000L)
             }
         })
 
