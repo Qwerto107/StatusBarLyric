@@ -75,7 +75,6 @@ import statusbar.lyric.tools.LogTools.log
 import statusbar.lyric.tools.LyricViewTools
 import statusbar.lyric.tools.LyricViewTools.cancelAnimation
 import statusbar.lyric.tools.LyricViewTools.hideView
-//import statusbar.lyric.tools.LyricViewTools.randomAnima
 import statusbar.lyric.tools.LyricViewTools.showView
 import statusbar.lyric.tools.Tools.callMethod
 import statusbar.lyric.tools.Tools.existField
@@ -144,7 +143,6 @@ class SystemUILyric : BaseHook() {
 
     @Volatile
     var isHiding: Boolean = false
-    private var isRandomAnima: Boolean = false
     private var autoHideController: Any? = null
     private val isReady: Boolean get() = this@SystemUILyric::clockView.isInitialized
 
@@ -813,21 +811,19 @@ class SystemUILyric : BaseHook() {
                     }
                 }
 
-                // val animation = config.lyricAnimation
-                // isRandomAnima = animation == 11
-                // if (!isRandomAnima) {
-                //     val interpolator = config.lyricInterpolator
-                //     val duration = config.animationDuration
-                //     inAnimation = LyricViewTools.switchViewInAnima(animation, interpolator, duration)
-                //     outAnimation = LyricViewTools.switchViewOutAnima(animation, duration)
-                // }
-                val animationIn = config.lyricAnimationIn  // 入场动画
-                val animationOut = config.lyricAnimationOut  // 出场动画
-                val interpolatorIn = config.lyricInterpolatorIn  // 入场动画插值器
-                val interpolatorOut = config.lyricInterpolatorOut  // 出场动画插值器
-                val durationIn = config.animationDurationIn  // 入场动画时长
-                val durationOut = config.animationDurationOut  // 出场动画时长
-                inAnimation = LyricViewTools.switchViewInAnima(animationIn, interpolatorIn, durationIn)
+                val animationIn = config.lyricAnimationIn  // 开始动画
+                val animationOut = config.lyricAnimationOut  // 结束动画
+                val interpolatorIn = config.lyricInterpolatorIn  // 开始动画插值器
+                val interpolatorOut = config.lyricInterpolatorOut  // 结束动画插值器
+                val durationIn = config.animationDurationIn  // 开始动画时长
+                val durationOut = config.animationDurationOut  // 结束动画时长
+                val durationInterval = when (config.animationAutoIntervalSwitch) {  // 结束动画-开始动画的间隔时间
+                    true -> config.animationDurationOut  // 间隔时长使用结束动画时长
+                    else -> config.animationInterval  // 使用配置值
+                }
+                // 开始动画
+                inAnimation = LyricViewTools.switchViewInAnima(animationIn, interpolatorIn, durationIn, durationInterval.toLong())
+                // 结束动画
                 outAnimation = LyricViewTools.switchViewOutAnima(animationOut, interpolatorOut, durationOut)
                 runCatching {
                     val file = File("${context.filesDir.path}/font")

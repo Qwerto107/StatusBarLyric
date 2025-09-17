@@ -107,6 +107,10 @@
         <item>ZoomInDown</item>
         <item>ZoomInLeft</item>
         <item>ZoomInRight</item>
+        <item>ZoomInUpLeft</item>
+        <item>ZoomInUpRight</item>
+        <item>ZoomInDownLeft</item>
+        <item>ZoomInDownRight</item>
         <item>RollIn</item>
         <item>RotateIn</item>
         <item>RotateInDownLeft</item>
@@ -128,48 +132,10 @@
         <item>ZoomOutDown</item>
         <item>ZoomOutLeft</item>
         <item>ZoomOutRight</item>
-        <item>RollOut</item>
-        <item>RotateOut</item>
-        <item>RotateOutDownLeft</item>
-        <item>RotateOutDownRight</item>
-        <item>RotateOutUpLeft</item>
-        <item>RotateOutUpRight</item>
-    </string-array>
-    <string-array name="lyric_animation_in_display_options">
-        <item>FadeIn</item>
-        <item>FadeInUp</item>
-        <item>FadeInDown</item>
-        <item>FadeInLeft</item>
-        <item>FadeInRight</item>
-        <item>SlideInUp</item>
-        <item>SlideInDown</item>
-        <item>SlideInLeft</item>
-        <item>SlideInRight</item>
-        <item>ZoomInUp</item>
-        <item>ZoomInDown</item>
-        <item>ZoomInLeft</item>
-        <item>ZoomInRight</item>
-        <item>RollIn</item>
-        <item>RotateIn</item>
-        <item>RotateInDownLeft</item>
-        <item>RotateInDownRight</item>
-        <item>RotateInUpLeft</item>
-        <item>RotateInUpRight</item>
-    </string-array>
-    <string-array name="lyric_animation_out_display_options">
-        <item>FadeOut</item>
-        <item>FadeOutUp</item>
-        <item>FadeOutDown</item>
-        <item>FadeOutLeft</item>
-        <item>FadeOutRight</item>
-        <item>SlideOutUp</item>
-        <item>SlideOutDown</item>
-        <item>SlideOutLeft</item>
-        <item>SlideOutRight</item>
-        <item>ZoomOutUp</item>
-        <item>ZoomOutDown</item>
-        <item>ZoomOutLeft</item>
-        <item>ZoomOutRight</item>
+        <item>ZoomOutUpLeft</item>
+        <item>ZoomOutUpRight</item>
+        <item>ZoomOutDownLeft</item>
+        <item>ZoomOutDownRight</item>
         <item>RollOut</item>
         <item>RotateOut</item>
         <item>RotateOutDownLeft</item>
@@ -179,6 +145,9 @@
     </string-array>
     <string name="lyrics_animation_interpolator_in">Lyric Animation Interpolator In</string>
     <string name="lyrics_animation_interpolator_out">Lyric Animation Interpolator Out</string>
+    <string name="lyrics_animation_interval_auto">Automatic Animation Interval</string>
+    <string name="lyrics_animation_interval">Interval before lyric animation starts</string>
+    <string name="lyrics_animation_interval_tips">Range: 0~1000</string>
     <string name="lyrics_interpolator_linear">Linear</string>
     <string name="lyrics_interpolator_accelerate">Accelerate</string>
     <string name="lyrics_interpolator_decelerate">Decelerate</string>

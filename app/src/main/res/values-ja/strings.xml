@@ -103,49 +103,9 @@
     <string name="lyrics_animation_duration_in_tips">範囲: 0~1000</string>
     <string name="lyrics_animation_duration_out">歌詞のアニメーションの終了の長さ</string>
     <string name="lyrics_animation_duration_out_tips">範囲: 0~1000</string>
-    <!-- アニメーション表示名：入場アニメーション -->
-    <string-array name="lyric_animation_in_display_options">
-        <item>フェードイン</item>
-        <item>上フェードイン</item>
-        <item>下フェードイン</item>
-        <item>左フェードイン</item>
-        <item>右フェードイン</item>
-        <item>上スライドイン</item>
-        <item>下スライドイン</item>
-        <item>左スライドイン</item>
-        <item>右スライドイン</item>
-        <item>上ズームイン</item>
-        <item>下ズームイン</item>
-        <item>左ズームイン</item>
-        <item>右ズームイン</item>
-        <item>ロールイン</item>
-        <item>回転イン</item>
-        <item>左下回転イン</item>
-        <item>右下回転イン</item>
-        <item>左上回転イン</item>
-        <item>右上回転イン</item>
-    </string-array>
-    <string-array name="lyric_animation_out_display_options">
-        <item>フェードアウト</item>
-        <item>上フェードアウト</item>
-        <item>下フェードアウト</item>
-        <item>左フェードアウト</item>
-        <item>右フェードアウト</item>
-        <item>上スライドアウト</item>
-        <item>下スライドアウト</item>
-        <item>左スライドアウト</item>
-        <item>右スライドアウト</item>
-        <item>上ズームアウト</item>
-        <item>下ズームアウト</item>
-        <item>左ズームアウト</item>
-        <item>右ズームアウト</item>
-        <item>ロールアウト</item>
-        <item>回転アウト</item>
-        <item>左下回転アウト</item>
-        <item>右下回転アウト</item>
-        <item>左上回転アウト</item>
-        <item>右上回転アウト</item>
-    </string-array>
+    <string name="lyrics_animation_interval">歌詞アニメーション開始前のインターバル時間</string>
+    <string name="lyrics_animation_interval_auto">自動アニメーション間隔</string>
+    <string name="lyrics_animation_interval_tips">範囲: 0~1000</string>
     <string name="hide_notification_icon">自動で通知アイコンを隠す</string>
     <string name="limit_visibility_change">可視性の変更を制限</string>
     <string name="limit_visibility_change_tips">一部のシステムの特性で時計が表示される問題は防ぐことができます</string>

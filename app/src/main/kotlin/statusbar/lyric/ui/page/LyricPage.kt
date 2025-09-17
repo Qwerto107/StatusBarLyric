@@ -104,12 +104,6 @@ fun LyricPage(
     val lyricAnimOutOptions = remember {
         context.resources.getStringArray(R.array.lyric_animation_out_options).toList()
     }
-    val lyricAnimInDisplayOptions = remember {
-        context.resources.getStringArray(R.array.lyric_animation_in_display_options).toList()
-    }
-    val lyricAnimOutDisplayOptions = remember {
-        context.resources.getStringArray(R.array.lyric_animation_out_display_options).toList()
-    }
     // 入场动画选中的索引
     val lyricAnimInSelectedOption = remember {
         mutableIntStateOf(lyricAnimInOptions.indexOf(config.lyricAnimationIn))
@@ -144,6 +138,8 @@ fun LyricPage(
     val showLyricEndMarginsDialog = remember { mutableStateOf(false) }
     val showLyricAnimInDurationDialog = remember { mutableStateOf(false) }
     val showLyricAnimOutDurationDialog = remember { mutableStateOf(false) }
+    val showLyricAnimIntervalDialog = remember { mutableStateOf(false) }
+    val showLyricAnimAutoIntervalSwitch = remember { mutableStateOf(config.animationAutoIntervalSwitch) }
 
     val hazeState = remember { HazeState() }
     val hazeStyle = HazeStyle(
@@ -344,10 +340,10 @@ fun LyricPage(
                             .padding(horizontal = 12.dp)
                             .padding(bottom = 6.dp)
                     ) {
-                        // 开始动画
+                        // 歌词开始动画类型
                         SuperDropdown(
                             title = stringResource(R.string.lyrics_animation_in),
-                            items = lyricAnimInDisplayOptions,
+                            items = lyricAnimInOptions,
                             selectedIndex = lyricAnimInSelectedOption.value,
                             onSelectedIndexChange = { newIndex ->
                                 lyricAnimInSelectedOption.value = newIndex
@@ -355,6 +351,7 @@ fun LyricPage(
                                 changeConfig()
                             }
                         )
+                        // 歌词开始动画插值器
                         SuperDropdown(
                             title = stringResource(R.string.lyrics_animation_interpolator_in),
                             items = lyricInterpolatorOptions,
@@ -365,6 +362,7 @@ fun LyricPage(
                                 changeConfig()
                             },
                         )
+                        // 歌词开始动画时长
                         SuperArrow(
                             title = stringResource(R.string.lyrics_animation_duration_in),
                             onClick = {
@@ -372,10 +370,32 @@ fun LyricPage(
                             },
                             holdDownState = showLyricAnimInDurationDialog.value
                         )
-                        // 结束动画
+                        // 自动设置歌词结束-歌词开始的间隔时间
+                        SuperSwitch(
+                            title = stringResource(R.string.lyrics_animation_interval_auto),
+                            checked = showLyricAnimAutoIntervalSwitch.value,
+                            onCheckedChange = {
+                                showLyricAnimAutoIntervalSwitch.value = it
+                                config.animationAutoIntervalSwitch = it
+                                changeConfig()
+                            }
+                        )
+                        AnimatedVisibility(
+                            visible = !showLyricAnimAutoIntervalSwitch.value
+                        ) {
+                            // 歌词结束-歌词开始的间隔时间
+                            SuperArrow(
+                                title = stringResource(R.string.lyrics_animation_interval),
+                                onClick = {
+                                    showLyricAnimIntervalDialog.value = true
+                                },
+                                holdDownState = showLyricAnimIntervalDialog.value
+                            )
+                        }
+                        // 歌词结束动画
                         SuperDropdown(
                             title = stringResource(R.string.lyrics_animation_out),
-                            items = lyricAnimOutDisplayOptions,
+                            items = lyricAnimOutOptions,
                             selectedIndex = lyricAnimOutSelectedOption.value,
                             onSelectedIndexChange = { newIndex ->
                                 lyricAnimOutSelectedOption.value = newIndex
@@ -383,6 +403,7 @@ fun LyricPage(
                                 changeConfig()
                             }
                         )
+                        // 歌词结束动画插值器
                         SuperDropdown(
                             title = stringResource(R.string.lyrics_animation_interpolator_out),
                             items = lyricInterpolatorOptions,
@@ -393,6 +414,7 @@ fun LyricPage(
                                 changeConfig()
                             },
                         )
+                        // 歌词结束动画时长类型
                         SuperArrow(
                             title = stringResource(R.string.lyrics_animation_duration_out),
                             onClick = {
@@ -443,6 +465,7 @@ fun LyricPage(
     LyricEndMarginsDialog(showLyricEndMarginsDialog)
     LyricAnimInDurationDialog(showLyricAnimInDurationDialog)
     LyricAnimOutDurationDialog(showLyricAnimOutDurationDialog)
+    LyricAnimIntervalDialog(showLyricAnimIntervalDialog)
 }
 
 @Composable
@@ -1084,6 +1107,49 @@ fun LyricAnimOutDurationDialog(showDialog: MutableState<Boolean>) {
                     } else {
                         config.animationDurationOut = 300
                         value.value = "300"
+                    }
+                    showDialog.value = false
+                    changeConfig()
+                }
+            )
+        }
+    }
+}
+
+@Composable
+fun LyricAnimIntervalDialog(showDialog: MutableState<Boolean>) {
+    val value = remember { mutableStateOf(config.animationInterval.toString()) }
+    SuperDialog(
+        title = stringResource(R.string.lyrics_animation_interval),
+        summary = stringResource(R.string.lyrics_animation_interval_tips),
+        show = showDialog,
+        onDismissRequest = { showDialog.value = false },
+    ) {
+        TextField(
+            modifier = Modifier.padding(bottom = 16.dp),
+            value = value.value,
+            maxLines = 1,
+            onValueChange = { value.value = it }
+        )
+        Row(
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            TextButton(
+                modifier = Modifier.weight(1f),
+                text = stringResource(R.string.cancel),
+                onClick = { showDialog.value = false }
+            )
+            Spacer(Modifier.width(20.dp))
+            TextButton(
+                modifier = Modifier.weight(1f),
+                text = stringResource(R.string.ok),
+                colors = ButtonDefaults.textButtonColorsPrimary(),
+                onClick = {
+                    if (value.value.toIntOrNull().isNotNull() && value.value.toInt() in 0..1000) {
+                        config.animationInterval = value.value.toInt()
+                    } else {
+                        config.animationInterval = 0
+                        value.value = "0"
                     }
                     showDialog.value = false
                     changeConfig()

@@ -331,33 +331,47 @@ class Config {
         set(value) {
             config.put("lyricAnimationOut", value)
         }
-    var lyricInterpolatorIn: Int
+    var lyricInterpolatorIn: Int  // 歌词开始动画插值器
         get() {
             return config.opt("lyricInterpolatorIn", 3)
         }
         set(value) {
             config.put("lyricInterpolatorIn", value)
         }
-    var lyricInterpolatorOut: Int
+    var lyricInterpolatorOut: Int  // 歌词结束动画插值器
         get() {
             return config.opt("lyricInterpolatorOut", 3)
         }
         set(value) {
             config.put("lyricInterpolatorOut", value)
         }
-    var animationDurationIn: Int
+    var animationDurationIn: Int  // 歌词开始动画时长（ms）
         get() {
-            return config.opt("animationDurationIn", 700)
+            return config.opt("animationDurationIn", 400)
         }
         set(value) {
             config.put("animationDurationIn", value)
         }
-    var animationDurationOut: Int
+    var animationDurationOut: Int  // 歌词结束动画时长（ms）
         get() {
             return config.opt("animationDurationOut", 300)
         }
         set(value) {
             config.put("animationDurationOut", value)
+        }
+    var animationInterval: Int  // 结束动画-开始动画的间隔时间
+        get() {
+            return config.opt("animationInterval", 0)
+        }
+        set(value) {
+            config.put("animationInterval", value)
+        }
+    var animationAutoIntervalSwitch: Boolean  // 结束动画-开始动画自动间隔开关
+        get() {
+            return config.opt("animationAutoInterval", true)
+        }
+        set(value) {
+            config.put("animationAutoInterval", value)
         }
     var hideLyricWhenLockScreen: Boolean
         get() {
